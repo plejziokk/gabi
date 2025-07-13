@@ -125,20 +125,23 @@ function getFontList() {
     const fonts = ['Arial', 'Times New Roman', 'Courier', 'Verdana', 'Georgia'];
     return fonts.filter(font => document.fonts.check(`12px "${font}"`));
 }
-
 function verifyDevice(callback) {
+    if (isAndroid) {
+        callback(true); // Android zawsze OK
+        return;
+    }
+
     const currentFingerprint = generateFingerprint();
     const storedFingerprint = localStorage.getItem('deviceFingerprint');
-    
+
     if (!storedFingerprint) {
         localStorage.setItem('deviceFingerprint', currentFingerprint);
         callback(true);
         return;
     }
-    
+
     callback(currentFingerprint === storedFingerprint);
 }
-
 function checkDeviceAccess() {
     if (!isAndroid && !isIOS) {
         document.body.innerHTML = `
